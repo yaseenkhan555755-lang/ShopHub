@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shophub8 - Buy & Sell Marketplace</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <h2><i class="fas fa-shopping-bag"></i> Shophub8</h2>
+                </div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#" onclick="showSection('home')"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#" onclick="showSection('products')"><i class="fas fa-store"></i> Shop</a></li>
+                    <li><a href="#" onclick="goToSell()" id="sellBtn"><i class="fas fa-plus-circle"></i> Sell</a></li>
+                    <li><a href="#" onclick="showSection('cart')"><i class="fas fa-shopping-cart"></i> Cart (<span id="cartCount">0</span>)</a></li>
+                    <li><a href="#" onclick="toggleAuth()" id="authBtn"><i class="fas fa-user"></i> Login</a></li>
+                </ul>
+                <div class="nav-toggle" onclick="toggleMobileMenu()">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <h1>🛒 Welcome to Shophub8</h1>
+                <p>Buy from everyone. Sell when you want!</p>
+                <div class="hero-buttons">
+                    <button class="btn-primary" onclick="showSection('products')">
+                        <i class="fas fa-store"></i> Shop Now
+                    </button>
+                    <button class="btn-secondary" onclick="goToSell()">
+                        <i class="fas fa-plus-circle"></i> Start Selling
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products -->
+        <section id="products" class="section">
+            <div class="container">
+                <h2><i class="fas fa-store"></i> All Products</h2>
+                <div class="search-filter">
+                    <input type="text" id="searchInput" placeholder="🔍 Search products...">
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                        <option value="electronics">📱 Electronics</option>
+                        <option value="clothing">👕 Clothing</option>
+                        <option value="books">📚 Books</option>
+                        <option value="home">🏠 Home</option>
+                    </select>
+                </div>
+                <div id="productsContainer" class="products-grid"></div>
+            </div>
+        </section>
+
+        <!-- Sell -->
+        <section id="sell" class="section">
+            <div class="container">
+                <h2><i class="fas fa-plus-circle"></i> Add Your Product</h2>
+                <div id="loginPrompt" style="display:none;">
+                    <div style="text-align:center; padding:2rem; background:#fff3cd; border-radius:15px; margin-bottom:2rem;">
+                        <h3>🔐 Login Required</h3>
+                        <p>Join as seller to add products!</p>
+                        <button class="btn-primary" onclick="toggleAuth()">Login / Signup</button>
+                    </div>
+                </div>
+                <form id="productForm" class="product-form" style="display:none;">
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Product Name</label>
+                        <input type="text" id="productName" placeholder="iPhone 15 Pro" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-dollar-sign"></i> Price ($)</label>
+                        <input type="number" id="productPrice" step="0.01" placeholder="99.99" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-align-left"></i> Description</label>
+                        <textarea id="productDesc" rows="3" placeholder="Describe your product..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-tags"></i> Category</label>
+                        <select id="productCategory" required>
+                            <option value="electronics">📱 Electronics</option>
+                            <option value="clothing">👕 Clothing</option>
+                            <option value="books">📚 Books</option>
+                            <option value="home">🏠 Home & Garden</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-image"></i> Image URL (optional)</label>
+                        <input type="url" id="productImage" placeholder="https://example.com/image.jpg">
+                        <small>Paste Imgur link or leave blank</small>
+                    </div>
+                    <button type="submit" class="btn-primary"><i class="fas fa-plus"></i> List Product</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Cart -->
+        <section id="cart" class="section">
+            <div class="container">
+                <h2><i class="fas fa-shopping-cart"></i> Shopping Cart</h2>
+                <div id="cartItems" class="cart-items"></div>
+                <div class="cart-total">
+                    <h3>Total: $<span id="cartTotal">0.00</span></h3>
+                    <button class="btn-primary" onclick="checkout()" id="checkoutBtn" style="width:100%">
+                        <i class="fas fa-credit-card"></i> Checkout
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle">👤 Seller Login / Signup</h3>
+            <form onsubmit="handleAuth(event); return false;">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Choose Username</label>
+                    <input type="text" id="username" placeholder="ShopOwner123" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="email" placeholder="shop@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="password" placeholder="yourpassword" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%">
+                    🚀 Become Seller
+                </button>
+            </form>
+            <div id="authStatus"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Shophub8. <strong>Live Marketplace</strong></p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
